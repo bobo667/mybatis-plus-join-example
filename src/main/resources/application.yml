@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3307/mpj_test?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&ssl=false&useSSL=false&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: root
+    type: com.mysql.cj.jdbc.MysqlDataSource
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
