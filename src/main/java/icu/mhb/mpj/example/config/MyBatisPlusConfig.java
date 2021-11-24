@@ -1,6 +1,7 @@
 package icu.mhb.mpj.example.config;
 
 import com.baomidou.mybatisplus.core.injector.AbstractMethod;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import icu.mhb.mybatisplus.plugln.injector.JoinDefaultSqlInjector;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,8 +11,8 @@ import java.util.List;
 public class MyBatisPlusConfig extends JoinDefaultSqlInjector {
 
     @Override
-    public List<AbstractMethod> getMethodList(Class<?> mapperClass) {
-        return super.getMethodList(mapperClass);
+    public List<AbstractMethod> getMethodList(Class<?> mapperClass, TableInfo tableInfo) {
+        return super.getMethodList(mapperClass, tableInfo);
     }
 
 }

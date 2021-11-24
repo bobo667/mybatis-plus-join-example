@@ -1,6 +1,7 @@
 package icu.mhb.mpj.example.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.util.Date;
 
@@ -10,6 +11,7 @@ import java.util.Date;
  * @time 9/25/21 5:52 PM
  */
 @Data
+@Accessors(chain = true)
 @TableName("users")
 public class Users {
 

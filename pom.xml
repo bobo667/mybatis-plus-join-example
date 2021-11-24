@@ -34,17 +34,17 @@
         <dependency>
             <groupId>icu.mhb</groupId>
             <artifactId>mybatis-plus-join</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.3.2</version>
+            <version>3.4.2</version>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-extension</artifactId>
-            <version>3.3.2</version>
+            <version>3.4.3.4</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

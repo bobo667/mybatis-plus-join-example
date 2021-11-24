@@ -1,4 +1,5 @@
 package icu.mhb.mpj.example.service.impl;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import icu.mhb.mpj.example.entity.Users;
 import icu.mhb.mpj.example.entity.UsersAge;
 import icu.mhb.mpj.example.mapper.UsersMapper;
@@ -21,10 +22,17 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
 
     @Override
     public List<UsersVo> findByAgeName(String ageName) {
-        JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(Users.class);
-
-        wrapper.eq(Users::getUserId, 1)
+//        JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(Users.class);
+        // 如果需要根据实体查询可以采用这样的实例化
+        JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(new Users().setUserName("name啊")
+                                                                          .setUserId(1L));
+        // 或者可以采用这样的setEntity
+//        wrapper.setEntity(new Users().setUserName("name啊"));
+        wrapper
+//                .eq(Users::getUserId, 1)
                 .orderByDesc(Users::getUserId)
+                // 因为默认是查询主表所有查询字段，如果不需要查询主表全部字段就调用该方法
+//                .notDefaultSelectAll()
                 .groupBy(Users::getAgeId)
                 // selectAll 如果有参数就代表是排除的
                 // F解释下为啥用list接受不用可变数组接受，因为可变数组idea有警告看着难受
@@ -35,7 +43,7 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
                 .joinAnd(UsersAge::getId, "1", 0)
                 // selectAs 四种添加查询列的方式
                 .selectAs((cb -> {
-                    cb.add(Arrays.asList(UsersAge::getAgeDoc, UsersAge::getAgeName))
+                    cb.add(UsersAge::getAgeDoc, UsersAge::getAgeName)
                             .add(UsersAge::getId)
                             // 此处为了演示哪怕你的字段不符合标准还是可以映射的
                             .add(UsersAge::getAgeName, "usersAgeName")
@@ -46,6 +54,7 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
                 .orderByAsc(UsersAge::getId)
                 .groupBy(UsersAge::getId)
                 .end();
+
 
         return super.joinList(wrapper, UsersVo.class);
     }
