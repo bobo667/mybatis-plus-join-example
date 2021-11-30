@@ -33,8 +33,8 @@ CREATE TABLE `users` (
 -- Records of users
 -- ----------------------------
 BEGIN;
-INSERT INTO `users` VALUES (1, 'test1', '2021-09-26 10:42:29', 1);
-INSERT INTO `users` VALUES (2, 'test2', '2021-09-26 10:42:41', 1);
+INSERT INTO `users`(`user_id`, `user_name`, `create_time`, `age_id`) VALUES (1, '名字1', '2021-10-28 18:17:50', 1);
+INSERT INTO `users`(`user_id`, `user_name`, `create_time`, `age_id`) VALUES (2, '名字2', '2021-10-28 18:17:50', 1);
 COMMIT;
 
 -- ----------------------------

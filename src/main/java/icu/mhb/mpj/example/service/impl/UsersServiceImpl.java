@@ -1,5 +1,4 @@
 package icu.mhb.mpj.example.service.impl;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import icu.mhb.mpj.example.entity.Users;
 import icu.mhb.mpj.example.entity.UsersAge;
 import icu.mhb.mpj.example.mapper.UsersMapper;
@@ -58,5 +57,26 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
 
         return super.joinList(wrapper, UsersVo.class);
     }
+
+    @Override
+    public List<Integer> getIds() {
+
+        JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(Users.class)
+                .select(Users::getUserId);
+
+        return super.joinList(wrapper, Integer.class);
+    }
+
+    @Override
+    public String getUserName() {
+
+        JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(Users.class)
+                .select(Users::getUserName)
+                .eq(Users::getUserId, 1)
+                .last("limit 1");
+
+        return super.joinGetOne(wrapper, String.class);
+    }
+
 
 }

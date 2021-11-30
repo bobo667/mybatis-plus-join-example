@@ -18,4 +18,14 @@ class MybatisPlusExampleApplicationTests {
         System.out.println(JSON.toJSONString(usersService.findByAgeName("95")));
     }
 
+    @Test
+    void testIds() {
+        System.out.println(JSON.toJSONString(usersService.getIds()));
+    }
+
+    @Test
+    void testUserName() {
+        System.out.println(usersService.getUserName());
+    }
+
 }

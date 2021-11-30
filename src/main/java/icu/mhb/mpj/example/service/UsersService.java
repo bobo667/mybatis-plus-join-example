@@ -12,6 +12,23 @@ import java.util.List;
  */
 public interface UsersService extends JoinIService<Users> {
 
+    /**
+     * 基础多表示例
+     */
     List<UsersVo> findByAgeName(String ageName);
+
+    /**
+     * 获取单个id列表示例
+     *
+     * @return id列表
+     */
+    List<Integer> getIds();
+
+    /**
+     * 获取单个姓名示例
+     *
+     * @return 姓名
+     */
+    String getUserName();
 
 }
