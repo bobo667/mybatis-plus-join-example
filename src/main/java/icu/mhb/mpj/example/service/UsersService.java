@@ -18,6 +18,11 @@ public interface UsersService extends JoinIService<Users> {
     List<UsersVo> findByAgeName(String ageName);
 
     /**
+     * 一对一实例
+     */
+    List<UsersVo> oneToOne();
+
+    /**
      * 获取单个id列表示例
      *
      * @return id列表

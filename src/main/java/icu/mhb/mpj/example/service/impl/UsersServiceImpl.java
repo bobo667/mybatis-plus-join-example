@@ -1,4 +1,7 @@
 package icu.mhb.mpj.example.service.impl;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
+import com.baomidou.mybatisplus.core.toolkit.support.LambdaMeta;
 import icu.mhb.mpj.example.entity.Users;
 import icu.mhb.mpj.example.entity.UsersAge;
 import icu.mhb.mpj.example.mapper.UsersMapper;
@@ -6,6 +9,7 @@ import icu.mhb.mpj.example.service.UsersService;
 import icu.mhb.mpj.example.vo.UsersVo;
 import icu.mhb.mybatisplus.plugln.base.service.impl.JoinServiceImpl;
 import icu.mhb.mybatisplus.plugln.core.JoinLambdaWrapper;
+import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -23,12 +27,11 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
     public List<UsersVo> findByAgeName(String ageName) {
 //        JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(Users.class);
         // 如果需要根据实体查询可以采用这样的实例化
-        JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(new Users().setUserName("name啊")
-                                                                          .setUserId(1L));
+        JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(new Users().setUserId(1L));
         // 或者可以采用这样的setEntity
 //        wrapper.setEntity(new Users().setUserName("name啊"));
         wrapper
-//                .eq(Users::getUserId, 1)
+                .eq(Users::getUserId, 1)
                 .orderByDesc(Users::getUserId)
                 // 因为默认是查询主表所有查询字段，如果不需要查询主表全部字段就调用该方法
 //                .notDefaultSelectAll()
@@ -39,7 +42,8 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
 
         // 还可以有rightJoin innerJoin 使用，具体使用看场景
         wrapper.leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId)
-                .joinAnd(UsersAge::getId, "1", 0)
+//                .joinAnd(UsersAge::getId, "1", 0)
+                .select(UsersAge::getAgeDoc)
                 // selectAs 四种添加查询列的方式
                 .selectAs((cb -> {
                     cb.add(UsersAge::getAgeDoc, UsersAge::getAgeName)
@@ -57,6 +61,20 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
 
         return super.joinList(wrapper, UsersVo.class);
     }
+
+    @Override
+    public List<UsersVo> oneToOne() {
+        JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(Users.class);
+
+        wrapper.leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId)
+                .oneToOneSelect(UsersVo::getUsersAge, (cb) -> {
+                    cb.add(UsersAge::getAgeDoc, UsersAge::getAgeName)
+                            .add(UsersAge::getId, "ageId", UsersAge::getId);
+                }).end();
+
+        return super.joinList(wrapper, UsersVo.class);
+    }
+
 
     @Override
     public List<Integer> getIds() {

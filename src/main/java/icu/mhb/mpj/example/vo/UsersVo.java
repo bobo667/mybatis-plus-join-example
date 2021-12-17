@@ -1,4 +1,5 @@
 package icu.mhb.mpj.example.vo;
+import icu.mhb.mpj.example.entity.UsersAge;
 import lombok.Data;
 
 import java.util.Date;
@@ -26,5 +27,7 @@ public class UsersVo {
     private String ageDoc;
 
     private String users_age_name;
+
+    private UsersAge usersAge;
 
 }

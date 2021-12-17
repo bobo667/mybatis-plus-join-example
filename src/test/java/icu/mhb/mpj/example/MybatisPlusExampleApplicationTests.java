@@ -24,6 +24,11 @@ class MybatisPlusExampleApplicationTests {
     }
 
     @Test
+    void testOneToOne() {
+        System.out.println(JSON.toJSONString(usersService.oneToOne()));
+    }
+
+    @Test
     void testUserName() {
         System.out.println(usersService.getUserName());
     }
