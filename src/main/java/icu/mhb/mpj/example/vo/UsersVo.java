@@ -3,6 +3,7 @@ import icu.mhb.mpj.example.entity.UsersAge;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author mahuibo
@@ -18,7 +19,7 @@ public class UsersVo {
 
     private Date createTime;
 
-    private Long ageId;
+    private Integer ageId;
 
     private Long ageTableId;
 

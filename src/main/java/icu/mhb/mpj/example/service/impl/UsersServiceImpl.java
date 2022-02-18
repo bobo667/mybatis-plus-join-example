@@ -2,13 +2,16 @@ package icu.mhb.mpj.example.service.impl;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
 import com.baomidou.mybatisplus.core.toolkit.support.LambdaMeta;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import icu.mhb.mpj.example.entity.Users;
 import icu.mhb.mpj.example.entity.UsersAge;
 import icu.mhb.mpj.example.mapper.UsersMapper;
 import icu.mhb.mpj.example.service.UsersService;
+import icu.mhb.mpj.example.vo.UsersAgesVo;
 import icu.mhb.mpj.example.vo.UsersVo;
 import icu.mhb.mybatisplus.plugln.base.service.impl.JoinServiceImpl;
 import icu.mhb.mybatisplus.plugln.core.JoinLambdaWrapper;
+import lombok.SneakyThrows;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +34,7 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
         // 或者可以采用这样的setEntity
 //        wrapper.setEntity(new Users().setUserName("name啊"));
         wrapper
-                .eq(Users::getUserId, 1)
+//                .eq(Users::getUserId, 1)
                 .orderByDesc(Users::getUserId)
                 // 因为默认是查询主表所有查询字段，如果不需要查询主表全部字段就调用该方法
 //                .notDefaultSelectAll()
@@ -64,7 +67,12 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
 
     @Override
     public List<UsersVo> oneToOne() {
-        JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(Users.class);
+        JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(Users.class)
+                .selectAs((cb) -> {
+                    cb.add(Users::getUserId, Users::getUserName, Users::getCreateTime)
+                            .add("11", "ageTableId")
+                            .add(Users::getUserName, "mpnb");
+                });
 
         wrapper.leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId)
                 .oneToOneSelect(UsersVo::getUsersAge, (cb) -> {
@@ -73,6 +81,43 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
                 }).end();
 
         return super.joinList(wrapper, UsersVo.class);
+    }
+
+    @Override
+    public UsersVo getByAgeName(String ageName) {
+        JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(Users.class);
+
+        wrapper.select(Users::getUserId, Users::getUserName)
+                .leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId)
+                .oneToOneSelect(UsersVo::getUsersAge, (cb) -> {
+                    cb.add(UsersAge::getId, "ageId", UsersAge::getId)
+                            .add(UsersAge::getAgeDoc, UsersAge::getAgeName);
+                })
+                .eq(UsersAge::getAgeName, ageName)
+                .end()
+                .last("limit 1");
+
+        return super.joinGetOne(wrapper, UsersVo.class);
+    }
+
+    @Override
+    public int getCountByAgeName(String ageName) {
+        JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(Users.class);
+
+        wrapper.select(Users::getUserId, Users::getUserName)
+                .leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId)
+                .eq(UsersAge::getAgeName, ageName).end();
+
+        return super.joinCount(wrapper);
+    }
+
+
+    @SneakyThrows
+    @Override
+    public Page<UsersVo> page() {
+//        LambdaMeta lambdaMeta = LambdaUtils.extract(Users::getAgeId);
+//        System.out.println(lambdaMeta.getInstantiatedClass().getDeclaredField(lambdaMeta.getImplMethodName()).getDeclaringClass());
+        return super.joinPage(new Page<>(1, 100), new JoinLambdaWrapper<>(Users.class), UsersVo.class);
     }
 
 
