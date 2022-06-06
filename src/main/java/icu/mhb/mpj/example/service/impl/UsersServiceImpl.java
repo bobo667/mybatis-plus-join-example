@@ -99,22 +99,6 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
         return super.joinGetOne(wrapper, UsersVo.class);
     }
 
-    public static void main(String[] args) {
-        Class c = HashMap.class;
-        System.out.println(c.isArray());
-        System.out.println(Arrays.toString(c.getInterfaces()));
-        boolean assignableFrom = c.isAssignableFrom(List.class);//判断c是否是List类的子类或父类
-
-        for (Class anInterface : c.getInterfaces()) {
-            if (anInterface.equals(Map.class)) {
-                System.out.println("map");
-            }
-        }
-        if (assignableFrom) {
-            System.out.println("123");
-        }
-    }
-
     @Override
     public int getCountByAgeName(String ageName) {
         JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(Users.class);
