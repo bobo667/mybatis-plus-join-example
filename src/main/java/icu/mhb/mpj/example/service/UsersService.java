@@ -6,6 +6,7 @@ import icu.mhb.mpj.example.vo.UsersVo;
 import icu.mhb.mybatisplus.plugln.base.service.JoinIService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author mahuibo
@@ -54,5 +55,12 @@ public interface UsersService extends JoinIService<Users> {
      * @return 姓名
      */
     String getUserName();
+
+    /**
+     * 自定义别名
+     *
+     * @return String
+     */
+    List<Map> customizeAlias();
 
 }

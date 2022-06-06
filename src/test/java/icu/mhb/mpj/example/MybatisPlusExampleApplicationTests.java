@@ -58,4 +58,9 @@ class MybatisPlusExampleApplicationTests {
         System.out.println(JSON.toJSONString(usersService.page()));
     }
 
+    @Test
+    void testAliasAndReturnMap() {
+        System.out.println(JSON.toJSONString(usersService.customizeAlias()));
+    }
+
 }

@@ -15,8 +15,7 @@ import lombok.SneakyThrows;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author mahuibo
@@ -100,6 +99,22 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
         return super.joinGetOne(wrapper, UsersVo.class);
     }
 
+    public static void main(String[] args) {
+        Class c = HashMap.class;
+        System.out.println(c.isArray());
+        System.out.println(Arrays.toString(c.getInterfaces()));
+        boolean assignableFrom = c.isAssignableFrom(List.class);//判断c是否是List类的子类或父类
+
+        for (Class anInterface : c.getInterfaces()) {
+            if (anInterface.equals(Map.class)) {
+                System.out.println("map");
+            }
+        }
+        if (assignableFrom) {
+            System.out.println("123");
+        }
+    }
+
     @Override
     public int getCountByAgeName(String ageName) {
         JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(Users.class);
@@ -139,6 +154,21 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
                 .last("limit 1");
 
         return super.joinGetOne(wrapper, String.class);
+    }
+
+    @Override
+    public List<Map> customizeAlias() {
+        // 两个参数代表自定义别名
+        JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(Users.class, "userMaster");
+
+        wrapper
+                .select(Users::getUserId, Users::getUserName)
+                .leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId, "u_age")
+                .select(UsersAge::getAgeDoc).end()
+                .leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId, "u_a")
+                .select(UsersAge::getAgeName).end();
+
+        return super.joinList(wrapper, Map.class);
     }
 
 
