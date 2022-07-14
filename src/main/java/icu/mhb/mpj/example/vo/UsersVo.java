@@ -1,4 +1,8 @@
 package icu.mhb.mpj.example.vo;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
+import icu.mhb.mpj.example.entity.TestUserJson;
 import icu.mhb.mpj.example.entity.UsersAge;
 import lombok.Data;
 
@@ -30,5 +34,7 @@ public class UsersVo {
     private String users_age_name;
 
     private UsersAge usersAge;
+
+    private TestUserJson contentJson;
 
 }

@@ -19,6 +19,7 @@ public interface UsersService extends JoinIService<Users> {
      * 基础多表示例
      */
     List<UsersVo> findByAgeName(String ageName);
+    List<UsersAgesVo> test1(String ageName);
 
     /**
      * 一对一实例

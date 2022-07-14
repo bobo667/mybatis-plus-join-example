@@ -65,6 +65,20 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
     }
 
     @Override
+    public List<UsersAgesVo> test1(String ageName) {
+        JoinLambdaWrapper<UsersAgesVo> wrapper = joinLambdaQueryWrapper(UsersAgesVo.class).eq(UsersAgesVo::getId, 1)
+                .select(UsersAgesVo::getId);
+
+        return super.joinList(wrapper, UsersAgesVo.class);
+    }
+
+    public static void main(String[] args) {
+        LambdaMeta extract = LambdaUtils.extract(UsersAgesVo::getId);
+        System.out.println(extract.getImplMethodName());
+        System.out.println(extract.getInstantiatedClass());
+    }
+
+    @Override
     public List<UsersVo> oneToOne() {
         JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(Users.class)
                 .selectAs((cb) -> {

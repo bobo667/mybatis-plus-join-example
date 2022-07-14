@@ -27,6 +27,10 @@ class MybatisPlusExampleApplicationTests {
     void getByAgeName() {
         System.out.println(JSON.toJSONString(usersService.getByAgeName("90")));
     }
+    @Test
+    void getByAgeName1() {
+        System.out.println(JSON.toJSONString(usersService.test1("90")));
+    }
 
     @Test
     void getCountByAgeName() {
