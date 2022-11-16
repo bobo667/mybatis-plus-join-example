@@ -1,9 +1,7 @@
-package icu.mhb.mpj.example.entity;
+package icu.mhb.mpj.example.vo;
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
 import lombok.Data;
 
 /**
@@ -13,17 +11,13 @@ import lombok.Data;
  */
 @TableName("users_age")
 @Data
-public class UsersAge {
+public class UsersAgeVo {
 
     @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    private String id;
 
-    //    @TableLogic
     private String ageDoc;
 
     private String ageName;
-
-    @TableField(typeHandler = FastjsonTypeHandler.class)
-    private TestUserJson contentJsonAge;
 
 }

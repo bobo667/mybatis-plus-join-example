@@ -1,21 +1,19 @@
 package icu.mhb.mpj.example.service.impl;
-import com.baomidou.mybatisplus.core.metadata.TableInfo;
-import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
-import com.baomidou.mybatisplus.core.toolkit.support.LambdaMeta;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import icu.mhb.mpj.example.config.FuncKeyWordImpl;
 import icu.mhb.mpj.example.entity.Users;
 import icu.mhb.mpj.example.entity.UsersAge;
 import icu.mhb.mpj.example.mapper.UsersMapper;
 import icu.mhb.mpj.example.service.UsersService;
-import icu.mhb.mpj.example.vo.UsersAgesVo;
 import icu.mhb.mpj.example.vo.UsersVo;
 import icu.mhb.mybatisplus.plugln.base.service.impl.JoinServiceImpl;
 import icu.mhb.mybatisplus.plugln.core.JoinLambdaWrapper;
 import lombok.SneakyThrows;
-import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author mahuibo
@@ -29,7 +27,7 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
     public List<UsersVo> findByAgeName(String ageName) {
 //        JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(Users.class);
         // 如果需要根据实体查询可以采用这样的实例化
-        JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(new Users().setUserId(1L));
+        JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(new Users());
         // 或者可以采用这样的setEntity
 //        wrapper.setEntity(new Users().setUserName("name啊"));
         wrapper
@@ -43,39 +41,58 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
                 .selectAll(Arrays.asList(Users::getUserName, Users::getAgeId));
 
         // 还可以有rightJoin innerJoin 使用，具体使用看场景
-        wrapper.leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId)
+        wrapper.leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId, "u_age")
 //                .joinAnd(UsersAge::getId, "1", 0)
                 .select(UsersAge::getAgeDoc)
                 // selectAs 四种添加查询列的方式
                 .selectAs((cb -> {
                     cb.add(UsersAge::getAgeDoc, UsersAge::getAgeName)
                             .add(UsersAge::getId)
-                            // 此处为了演示哪怕你的字段不符合标准还是可以映射的
-                            .add(UsersAge::getAgeName, "usersAgeName")
-                            .add(UsersAge::getId, "age_table_id")
-                            .add("", "mpnb");
+                            .add(UsersAge::getContentJsonAge)
+                            .add(UsersAge::getId, "ageTableId")
+                            .add("1", "mpnb")
+                            .add("sum(u_age.id)", "ageIds", false);
                 }))
-                .eq(ageName != null, UsersAge::getAgeName, ageName)
+                .eq(UsersAge::getAgeDoc, "12313")
+                .and(w -> w.eq(ageName != null, UsersAge::getAgeName, ageName).eq(UsersAge::getId, 1))
                 .orderByAsc(UsersAge::getId)
                 .groupBy(UsersAge::getId)
                 .end();
-
 
         return super.joinList(wrapper, UsersVo.class);
     }
 
     @Override
-    public List<UsersAgesVo> test1(String ageName) {
-        JoinLambdaWrapper<UsersAgesVo> wrapper = joinLambdaQueryWrapper(UsersAgesVo.class).eq(UsersAgesVo::getId, 1)
-                .select(UsersAgesVo::getId);
+    public List<UsersVo> testTypeHandler() {
+//        StringUtils
+        JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(Users.class)
+                .setFuncKeyWord(new FuncKeyWordImpl())
+                .distinct()
+                .selectAs(w -> w.add(Users::getContentJson))
+                .orderByDesc(Users::getAgeId)
+                .leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId)
+                .selectAs(w -> w.add(UsersAge::getContentJsonAge, "contentJsonAge"))
+                .orderByAsc(UsersAge::getId, 2)
+                .orderBySql("users.user_id asc", 0)
+                .end()
+                .orderBySql("users_age.age_name desc", 1);
 
-        return super.joinList(wrapper, UsersAgesVo.class);
+        return super.joinList(wrapper, UsersVo.class);
     }
 
-    public static void main(String[] args) {
-        LambdaMeta extract = LambdaUtils.extract(UsersAgesVo::getId);
-        System.out.println(extract.getImplMethodName());
-        System.out.println(extract.getInstantiatedClass());
+    @Override
+    public List<UsersVo> indexOrder() {
+        JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(Users.class)
+                .setFuncKeyWord(new FuncKeyWordImpl())
+                .distinct()
+                .orderByDesc(Users::getAgeId)
+                .leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId)
+                .orderByAsc(UsersAge::getId, 2)
+                .orderBySql("users.user_id asc", 0)
+                .end()
+                .orderBySql("users_age.age_name desc", 1);
+
+        return super.joinList(wrapper, UsersVo.class);
     }
 
     @Override
@@ -88,7 +105,7 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
                 });
 
         wrapper.leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId)
-                .oneToOneSelect(UsersVo::getUsersAge, (cb) -> {
+                .oneToOneSelect(UsersVo::getUsersAgeVo, (cb) -> {
                     cb.add(UsersAge::getAgeDoc, UsersAge::getAgeName)
                             .add(UsersAge::getId, "ageId", UsersAge::getId);
                 }).end();
@@ -123,7 +140,6 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
 
         return super.joinCount(wrapper);
     }
-
 
     @SneakyThrows
     @Override

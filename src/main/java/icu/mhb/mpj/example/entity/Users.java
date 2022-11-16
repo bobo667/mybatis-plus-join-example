@@ -26,7 +26,7 @@ public class Users {
 
     private Date createTime;
 
-    @TableLogic
+//    @TableLogic
     private Long ageId;
 
     @TableField(typeHandler = FastjsonTypeHandler.class)

@@ -1,7 +1,6 @@
 package icu.mhb.mpj.example.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import icu.mhb.mpj.example.entity.Users;
-import icu.mhb.mpj.example.vo.UsersAgesVo;
 import icu.mhb.mpj.example.vo.UsersVo;
 import icu.mhb.mybatisplus.plugln.base.service.JoinIService;
 
@@ -19,7 +18,18 @@ public interface UsersService extends JoinIService<Users> {
      * 基础多表示例
      */
     List<UsersVo> findByAgeName(String ageName);
-    List<UsersAgesVo> test1(String ageName);
+
+    /**
+     * 测试@TableField(typeHandler = xx.class)
+     *
+     * @return
+     */
+    List<UsersVo> testTypeHandler();
+
+    /**
+     * 排序相关
+     */
+    List<UsersVo> indexOrder();
 
     /**
      * 一对一实例

@@ -1,7 +1,6 @@
 package icu.mhb.mpj.example;
 
 import com.alibaba.fastjson.JSON;
-import icu.mhb.mpj.example.entity.Users;
 import icu.mhb.mpj.example.service.UsersAgeService;
 import icu.mhb.mpj.example.service.UsersService;
 import org.junit.jupiter.api.Test;
@@ -27,9 +26,10 @@ class MybatisPlusExampleApplicationTests {
     void getByAgeName() {
         System.out.println(JSON.toJSONString(usersService.getByAgeName("90")));
     }
+
     @Test
-    void getByAgeName1() {
-        System.out.println(JSON.toJSONString(usersService.test1("90")));
+    void testTypeHandler() {
+        System.out.println(JSON.toJSONString(usersService.testTypeHandler()));
     }
 
     @Test
