@@ -43,6 +43,11 @@ class MybatisPlusExampleApplicationTests {
     }
 
     @Test
+    void indexOrder() {
+        System.out.println(JSON.toJSONString(usersService.indexOrder()));
+    }
+
+    @Test
     void testOneToOne() {
         System.out.println(JSON.toJSONString(usersService.oneToOne()));
     }
