@@ -74,4 +74,18 @@ public interface UsersService extends JoinIService<Users> {
      */
     List<Map> customizeAlias();
 
+    /**
+     * 自动别名映射
+     *
+     * @return
+     */
+    List<UsersVo> automaticAlias();
+
+    /**
+     * joins 测试
+     *
+     * @return
+     */
+    List<UsersVo> joinsTest();
+
 }

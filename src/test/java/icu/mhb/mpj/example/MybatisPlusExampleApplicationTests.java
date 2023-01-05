@@ -37,6 +37,7 @@ class MybatisPlusExampleApplicationTests {
         System.out.println(JSON.toJSONString(usersService.getCountByAgeName("90")));
     }
 
+    //
     @Test
     void testIds() {
         System.out.println(JSON.toJSONString(usersService.getIds()));
@@ -70,6 +71,16 @@ class MybatisPlusExampleApplicationTests {
     @Test
     void testAliasAndReturnMap() {
         System.out.println(JSON.toJSONString(usersService.customizeAlias()));
+    }
+
+    @Test
+    void automaticAlias() {
+        System.out.println(JSON.toJSONString(usersService.automaticAlias()));
+    }
+
+    @Test
+    void joinsTest() {
+        System.out.println(JSON.toJSONString(usersService.joinsTest()));
     }
 
 }

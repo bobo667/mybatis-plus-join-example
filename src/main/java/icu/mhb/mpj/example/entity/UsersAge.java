@@ -1,9 +1,13 @@
 package icu.mhb.mpj.example.entity;
+
+import java.util.Date;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
+
 import lombok.Data;
 
 /**
@@ -22,6 +26,8 @@ public class UsersAge {
     private String ageDoc;
 
     private String ageName;
+
+    private Date createTime;
 
     @TableField(typeHandler = FastjsonTypeHandler.class)
     private TestUserJson contentJsonAge;

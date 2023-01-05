@@ -1,8 +1,6 @@
 package icu.mhb.mpj.example.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties;
-import com.baomidou.mybatisplus.autoconfigure.MybatisPlusPropertiesCustomizer;
 import com.baomidou.mybatisplus.core.injector.AbstractMethod;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
@@ -23,16 +21,20 @@ public class MyBatisPlusConfig extends JoinDefaultSqlInjector {
     }
 
     @Bean
-    public MybatisPlusPropertiesCustomizer plusPropertiesCustomizer() {
-        MybatisPlusJoinConfig.builder()
+    public MybatisPlusJoinConfig mybatisPlusJoinConfig() {
+        return MybatisPlusJoinConfig.builder()
                 // 查询字段别名关键字
                 .columnAliasKeyword("as")
                 // 表、left join、right join、inner join 表别名关键字
                 .tableAliasKeyword("as")
+                /*
+                  是否使用MappedStatement缓存，如果使用在JoinInterceptor中就会更改
+                  MappedStatement的id，导致mybatis-plus-mate 的某些拦截器插件报错，
+                  设置成false，代表不使用缓存则不会更改MappedStatement的id
+                 */
+                .isUseMsCache(false)
                 .build();
-        return MybatisPlusProperties::getGlobalConfig;
     }
-
 
 //    @Bean
 //    public MybatisPlusJoinConfig mybatisPlusJoinConfig() {
@@ -43,8 +45,6 @@ public class MyBatisPlusConfig extends JoinDefaultSqlInjector {
 //                .tableAliasKeyword("is")
 //                .build();
 //    }
-
-
 
 
     /**

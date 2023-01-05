@@ -4,6 +4,17 @@ spring:
     username: root
     password: root
     type: com.mysql.cj.jdbc.MysqlDataSource
+mybatis-mate:
+  cert:
+    # 请添加微信wx153666购买授权，不白嫖从我做起！ 测试证书会失效，请勿正式环境使用
+    grant: MM20221123001
+    license: puEQUeLGstdF1IT4cZ0STY1qJ7sdcDE+PR+yse3zg6yIEf40I8wqnvemcUvxyrni9Dq763HXS530lZiUjHCu/VqRDn2XSpkasL+XJ311PlhGrWi6I4gZ3WLcPMiJR6TC+JKaBk19UInBO3znU7ld8gqKW6WWhM86ym2CaBgd0EL9NKSocUUQU+u3NMku8sFqOoBX15BHhChwKq1GDjnHs95z+o0WcWrsIk+IDsoxUzdzNU3TGRc3i2RJslBXfwu78fKTIFJBuvmU3ekt7O2tVf7//0UDY8DU8OrVUbaSeW415h3zGzorG8jI8SgYw56fmmCY65VGPBUt7FELeMMY8w==
+  audit: true
+  # 全局配置加密算法密钥
+  encryptor:
+    # 随机字符串作为密钥即可
+    password: qmh9MK4KsZY8FnqkJYk8tzgc0H
+    algorithm: AES
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

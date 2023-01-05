@@ -1,12 +1,14 @@
 package icu.mhb.mpj.example.entity;
-import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.sql.JDBCType;
 import java.util.Date;
 
 /**
@@ -15,6 +17,7 @@ import java.util.Date;
  * @time 9/25/21 5:52 PM
  */
 @Data
+@Builder
 @Accessors(chain = true)
 @TableName(value = "users", autoResultMap = true)
 public class Users {
@@ -26,7 +29,7 @@ public class Users {
 
     private Date createTime;
 
-//    @TableLogic
+    //    @TableLogic
     private Long ageId;
 
     @TableField(typeHandler = FastjsonTypeHandler.class)
