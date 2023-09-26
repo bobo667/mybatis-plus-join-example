@@ -6,6 +6,7 @@ import icu.mhb.mpj.example.entity.UsersAge;
 import icu.mhb.mybatisplus.plugln.annotations.MasterTable;
 import icu.mhb.mybatisplus.plugln.annotations.TableAlias;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * @email mhb0409@qq.com
  * @date 2022-02-16
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @MasterTable(UsersAge.class)
 public class UsersAgesVo extends UsersAge {

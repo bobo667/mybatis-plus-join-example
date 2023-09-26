@@ -83,4 +83,8 @@ class MybatisPlusExampleApplicationTests {
         System.out.println(JSON.toJSONString(usersService.joinsTest()));
     }
 
+    @Test
+    void joinAnd() {
+        System.out.println(JSON.toJSONString(usersService.joinsAnd()));
+    }
 }

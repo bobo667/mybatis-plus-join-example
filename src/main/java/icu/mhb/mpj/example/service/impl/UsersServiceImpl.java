@@ -194,7 +194,8 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
         JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(Users.class, "userMaster");
 
         wrapper
-                .select(Users::getUserId, Users::getUserName)
+                .select(Users::getUserId)
+                .select(Users::getUserName)
                 .leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId, "u_age")
                 .eq(UsersAge::getId, 1)
                 .select(UsersAge::getAgeDoc).end()
@@ -227,7 +228,7 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
                 .leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId, "t1", w ->
                         w.eq(UsersAge::getId, 1).selectAs(UsersAge::getAgeName, UsersVo::getMpnb)
                 ).selectAs(cb -> {
-                    cb.add("count(id)","asdasd");
+                    cb.add("count(id)", "asdasd");
                 });
 
         return super.joinList(wrapper, UsersVo.class);
@@ -259,6 +260,21 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
         return Joins.of(Users.class)
                 .leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId)
                 .oneToOneSelect(UsersVo::getUsersAge, UsersAge.class).end()
+                .joinList(UsersVo.class);
+    }
+
+    @Override
+    public List<UsersVo> joinsAnd() {
+        return Joins.of(Users.class)
+                .leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId, w -> w.joinAnd(0, and -> {
+                }))
+                .selectSunQuery(UsersAge.class, w -> {
+                    w.selectAs(cb -> {
+                                cb.add(UsersAge::getAgeDoc, "cccccc")
+                                        .add("IFNULL(count(1),0)", "ass", false);
+                            })
+                            .eq(UsersAge::getId, Users::getAgeId);
+                })
                 .joinList(UsersVo.class);
     }
 

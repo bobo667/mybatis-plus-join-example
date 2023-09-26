@@ -16,7 +16,6 @@ import java.util.List;
  * @time 9/25/21 6:04 PM
  */
 @Data
-@Builder
 public class UsersVo {
 
     private Long id;
@@ -38,7 +37,7 @@ public class UsersVo {
     private String users_age_name;
 
     @JoinField(masterModelClass = Users.class, masterModelField = "ageId",
-            sunModelClass = UsersAge.class, sunModelField = "id", relevancyType = RelevancyType.ONT_TO_ONE,
+            sunModelClass = UsersAge.class, sunModelField = "id", relevancyType = RelevancyType.ONE_TO_ONE,
             sunAlias = "t1")
     private UsersAge usersAge;
 

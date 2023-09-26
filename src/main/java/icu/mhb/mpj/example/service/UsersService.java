@@ -87,5 +87,5 @@ public interface UsersService extends JoinIService<Users> {
      * @return
      */
     List<UsersVo> joinsTest();
-
+    List<UsersVo> joinsAnd();
 }
