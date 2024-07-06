@@ -18,7 +18,6 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@MasterTable(UsersAge.class)
 public class UsersAgesVo extends UsersAge {
 
     private List<Users> usersList;

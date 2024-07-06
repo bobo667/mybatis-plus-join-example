@@ -10,7 +10,7 @@
     </parent>
     <groupId>icu.mhb.mpj</groupId>
     <artifactId>mybatis-plus-example</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>mybatis-plus-example</name>
     <description>Demo project for Spring Boot</description>
     <properties>
@@ -34,9 +34,19 @@
 
         <dependency>
             <groupId>icu.mhb</groupId>
-            <artifactId>mybatis-plus-join</artifactId>
-            <version>1.3.7.test</version>
+            <artifactId>mybatis-plus-join-boot-starter</artifactId>
+            <version>2.0.1</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>icu.mhb</groupId>-->
+<!--            <artifactId>mybatis-plus-join-processor</artifactId>-->
+<!--            <version>2.0.1</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.github.yulichang</groupId>-->
+<!--            <artifactId>mybatis-plus-join-boot-starter</artifactId>-->
+<!--            <version>1.4.5</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
@@ -67,8 +77,13 @@
             <!--<version>3.5.2</version>-->
         <!--</dependency>-->
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>1.18.20</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -80,6 +95,27 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.20</version>
+                        </path>
+                        <path>
+                            <groupId>icu.mhb</groupId>
+                            <artifactId>mybatis-plus-join-processor</artifactId>
+                            <version>2.0.1</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

@@ -8,14 +8,25 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
 
+/**
+ * @author mahuibo
+ * @Title: ChainTests
+ * @email mhb0409@qq.com
+ * @time 2024/6/23
+ */
 @SpringBootTest
-class MybatisPlusExampleApplicationTests {
+public class ChainTests {
 
-    @Resource(name = "usersServiceImpl")
+    @Resource(name = "chainUsersServiceImpl")
     private UsersService usersService;
 
     @Resource
     private UsersAgeService usersAgeService;
+
+    @Test
+    void setEntityTest() {
+        System.out.println(JSON.toJSONString(usersService.setEntityTest()));
+    }
 
     @Test
     void contextLoads() {
@@ -38,11 +49,6 @@ class MybatisPlusExampleApplicationTests {
     }
 
     @Test
-    void allCondition() {
-        System.out.println(JSON.toJSONString(usersService.allCondition()));
-    }
-
-    @Test
     void getCountByAgeName() {
         System.out.println(JSON.toJSONString(usersService.getCountByAgeName("90")));
     }
@@ -61,6 +67,10 @@ class MybatisPlusExampleApplicationTests {
     @Test
     void testOneToOne() {
         System.out.println(JSON.toJSONString(usersService.oneToOne()));
+    }
+    @Test
+    void allCondition() {
+        System.out.println(JSON.toJSONString(usersService.allCondition()));
     }
 
     @Test
@@ -97,4 +107,6 @@ class MybatisPlusExampleApplicationTests {
     void joinAnd() {
         System.out.println(JSON.toJSONString(usersService.joinsAnd()));
     }
+
+
 }

@@ -1,3 +1,5 @@
+server:
+  port: 8081
 spring:
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/mpj_test?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&ssl=false&useSSL=false&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true
@@ -13,7 +15,7 @@ mybatis-mate:
   # 全局配置加密算法密钥
   encryptor:
     # 随机字符串作为密钥即可
-    password: qmh9MK4KsZY8FnqkJYk8tzgc0H
+    password: xxx
     algorithm: AES
 mybatis-plus:
   configuration:

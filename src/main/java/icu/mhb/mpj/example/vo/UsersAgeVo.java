@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import icu.mhb.mpj.example.entity.TestUserJson;
 import lombok.Data;
 
 /**
@@ -25,4 +26,6 @@ public class UsersAgeVo {
     private String ageName;
 
     private Date createTime;
+
+    private TestUserJson contentJsonAges;
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
+import icu.mhb.mybatisplus.plugln.annotations.JoinChainModel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,8 +18,8 @@ import java.util.Date;
  * @time 9/25/21 5:52 PM
  */
 @Data
-@Builder
 @Accessors(chain = true)
+@JoinChainModel
 @TableName(value = "users", autoResultMap = true)
 public class Users {
 

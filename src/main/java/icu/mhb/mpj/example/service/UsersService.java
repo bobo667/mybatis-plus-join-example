@@ -20,6 +20,12 @@ public interface UsersService extends JoinIService<Users> {
     List<UsersVo> findByAgeName(String ageName);
 
     /**
+     * 实体传入条件测试
+     * @return
+     */
+    List<UsersVo> setEntityTest();
+
+    /**
      * 测试@TableField(typeHandler = xx.class)
      *
      * @return
@@ -41,6 +47,8 @@ public interface UsersService extends JoinIService<Users> {
      */
     UsersVo getByAgeName(String ageName);
 
+    List<UsersVo> allCondition();
+
     /**
      * 获取count实例
      *
@@ -51,7 +59,7 @@ public interface UsersService extends JoinIService<Users> {
     /**
      * 分页查询
      */
-    Page<UsersVo> page();
+    Page<Users> page();
 
     /**
      * 获取单个id列表示例
@@ -87,5 +95,6 @@ public interface UsersService extends JoinIService<Users> {
      * @return
      */
     List<UsersVo> joinsTest();
+
     List<UsersVo> joinsAnd();
 }

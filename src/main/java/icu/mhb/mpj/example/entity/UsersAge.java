@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
 
+import icu.mhb.mpj.example.handler.TestUserJsonTypeHandler;
+import icu.mhb.mybatisplus.plugln.annotations.JoinChainModel;
 import lombok.Data;
 
 /**
@@ -15,8 +17,9 @@ import lombok.Data;
  * @Title: UsersAge
  * @time 9/25/21 5:53 PM
  */
-@TableName("users_age")
+@TableName(value = "users_age", autoResultMap = true)
 @Data
+@JoinChainModel
 public class UsersAge {
 
     @TableId(value = "id", type = IdType.AUTO)
@@ -29,7 +32,8 @@ public class UsersAge {
 
     private Date createTime;
 
-    @TableField(typeHandler = FastjsonTypeHandler.class)
+    @TableField(typeHandler = TestUserJsonTypeHandler.class)
     private TestUserJson contentJsonAge;
+
 
 }

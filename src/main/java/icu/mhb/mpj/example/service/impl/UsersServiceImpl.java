@@ -1,20 +1,28 @@
 package icu.mhb.mpj.example.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import icu.mhb.mpj.example.config.FuncKeyWordImpl;
 import icu.mhb.mpj.example.entity.Users;
 import icu.mhb.mpj.example.entity.UsersAge;
+import icu.mhb.mpj.example.entity.chain.UsersAgeChain;
+import icu.mhb.mpj.example.entity.chain.UsersChain;
 import icu.mhb.mpj.example.mapper.UsersMapper;
 import icu.mhb.mpj.example.service.UsersService;
+import icu.mhb.mpj.example.vo.UsersAgeVo;
 import icu.mhb.mpj.example.vo.UsersVo;
 import icu.mhb.mybatisplus.plugln.base.service.impl.JoinServiceImpl;
 import icu.mhb.mybatisplus.plugln.core.JoinLambdaWrapper;
+import icu.mhb.mybatisplus.plugln.core.chain.JoinChainQueryWrapper;
+import icu.mhb.mybatisplus.plugln.entity.BaseChainModel;
 import icu.mhb.mybatisplus.plugln.extend.Joins;
+import icu.mhb.mybatisplus.plugln.tookit.StringUtils;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -43,10 +51,29 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
                 // F解释下为啥用list接受不用可变数组接受，因为可变数组idea有警告看着难受
                 .selectAll(Arrays.asList(Users::getUserName, Users::getAgeId));
 
+        QueryWrapper<UsersAge> wrapper2 = new QueryWrapper<>();
+        wrapper2
+                .isNotNull("id")
+                .and(w -> {
+                    w.and(w2 -> {
+                        w2.and(w3 -> {
+                            w3.and(w4 -> {
+                                w4.and(w5 -> w5.like("id", 2).or()
+                                        .le("id", 34));
+                            });
+                        });
+                    });
+                })
+                .orderByDesc("id")
+                .groupBy("id")
+                .having("1={0}", 1);
+
+
         // 还可以有rightJoin innerJoin 使用，具体使用看场景
         wrapper.leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId, "u_age")
 //                .joinAnd(UsersAge::getId, "1", 0)
                 .select(UsersAge::getAgeDoc)
+                .changeQueryWrapper(wrapper2)
                 // selectAs 四种添加查询列的方式
                 .selectAs((cb -> {
                     cb.add(UsersAge::getAgeDoc, UsersAge::getAgeName)
@@ -62,18 +89,33 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
 //                .groupBy(UsersAge::getId)
                 .end();
 
+
         QueryWrapper<Users> wrapper1 = new QueryWrapper<>();
-        wrapper1.eq("user_id", 1)
+
+        wrapper1
+                .isNotNull("user_id")
                 .and(w -> {
-                    w.like("user_id", 2).or()
-                            .le("user_id", 34);
+                    w.and(w2 -> {
+                        w2.and(w3 -> {
+                            w3.and(w4 -> {
+                                w4.and(w5 -> w5.like("user_id", 2).or()
+                                        .le("user_id", 34));
+                            });
+                        });
+                    });
                 })
                 .orderByDesc("user_id")
                 .groupBy("user_id")
                 .having("1={0}", 1);
-        wrapper.changeQueryWrapper(wrapper1);
-
+        wrapper
+                .isNotNull(Users::getUserId)
+                .changeQueryWrapper(wrapper1);
         return super.joinList(wrapper, UsersVo.class);
+    }
+
+    @Override
+    public List<UsersVo> setEntityTest() {
+        return Collections.emptyList();
     }
 
     @Override
@@ -83,14 +125,10 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
                 .setFuncKeyWord(new FuncKeyWordImpl())
                 .distinct()
                 .selectAs(w -> w.add(Users::getContentJson, Users::getUserId, Users::getAgeId))
-                .orderByDesc(Users::getAgeId)
                 .leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId)
                 .selectAs(w -> w.add(UsersAge::getContentJsonAge, "contentJsonAge")
                         .add(UsersAge::getAgeName, UsersAge::getId))
-                .orderByAsc(UsersAge::getId, 2)
-                .orderBySql("users.user_id asc", 0)
-                .end()
-                .orderBySql("users_age.age_name desc", 1);
+                .end();
 
         return super.joinList(wrapper, UsersVo.class);
     }
@@ -134,7 +172,7 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
     public UsersVo getByAgeName(String ageName) {
         JoinLambdaWrapper<Users> wrapper = joinLambdaQueryWrapper(Users.class);
 
-        wrapper.select(Users::getUserId, Users::getUserName)
+        wrapper.select(Users::getUserId, Users::getUserId, Users::getUserName, Users::getContentJson)
                 .leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId, "user_age")
                 .oneToOneSelect(UsersVo::getUsersAge, (cb) -> {
                     cb.add(UsersAge::getId, "ageId", UsersAge::getId)
@@ -145,6 +183,30 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
                 .last("limit 1");
 
         return super.joinGetOne(wrapper, UsersVo.class);
+    }
+
+    @Override
+    public List<UsersVo> allCondition() {
+        UsersVo users = new UsersVo();
+        users.setUserName("setUserName");
+        users.setAgeName("setAgeName");
+
+        return Joins.of(Users.class)
+                .selectAs((cb) -> {
+                    cb.add(Users::getUserId, Users::getUserName, Users::getCreateTime);
+                })
+                .leftJoin(UsersAge.class, UsersAge::getId, Users::getAgeId, w -> {
+                    w.joinAnd(0, and -> and.eq(UsersAge::getId, 1))
+                            .eq(StringUtils.isNotBlank(users.getAgeName()), UsersAge::getAgeName, users.getAgeName())
+                            .eq(StringUtils.isNotBlank(users.getAgeDoc()), UsersAge::getAgeDoc, users.getAgeDoc())
+                            .selectAs((cb) -> {
+                                cb.add(UsersAge::getAgeDoc, UsersAge::getAgeName, UsersAge::getId);
+                            });
+                })
+                .eq(StringUtils.isNotBlank(users.getUserName()), Users::getUserName, users.getUserName())
+                .eq(ObjectUtils.isNotEmpty(users.getUserId()), Users::getUserId, users.getUserId())
+                .eq(ObjectUtils.isNotEmpty(users.getAgeId()), Users::getAgeId, users.getAgeId())
+                .joinList(UsersVo.class);
     }
 
     @Override
@@ -160,11 +222,16 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
 
     @SneakyThrows
     @Override
-    public Page<UsersVo> page() {
+    public Page<Users> page() {
 //        LambdaMeta lambdaMeta = LambdaUtils.extract(Users::getAgeId);
 //        System.out.println(lambdaMeta.getInstantiatedClass().getDeclaredField(lambdaMeta.getImplMethodName()).getDeclaringClass());
-        Page<UsersVo> page = new Page<>(1, 100);
-        return super.joinPage(page, new JoinLambdaWrapper<>(Users.class), UsersVo.class);
+        List<Users> usersList = joinLambdaQueryWrapper()
+                .joinList();
+        Users joinGetOne = joinLambdaQueryWrapper()
+                .last("limit 1")
+                .joinGetOne();
+        Page<Users> page = new Page<>(1, 100);
+        return joinLambdaQueryWrapper().joinPage(page);
     }
 
 
@@ -275,6 +342,14 @@ public class UsersServiceImpl extends JoinServiceImpl<UsersMapper, Users> implem
                             })
                             .eq(UsersAge::getId, Users::getAgeId);
                 })
+                /*
+                SELECT
+                    users.user_name,users.create_time,users.age_id,users.content_json,users.user_id,
+                    (SELECT users_age.age_doc as cccccc FROM users_age users_age where (users_age.id = users.age_id) ) as cccccc ,
+                    (SELECT IFNULL(count(1),0) as ass FROM users_age users_age where (users_age.id = users.age_id) ) as ass
+                 FROM users as users
+                 LEFT JOIN users_age as users_age ON users_age.id = users.age_id
+                 */
                 .joinList(UsersVo.class);
     }
 

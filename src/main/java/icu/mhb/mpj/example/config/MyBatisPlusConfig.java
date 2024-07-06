@@ -13,12 +13,13 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 @Configuration
-public class MyBatisPlusConfig extends JoinDefaultSqlInjector {
+public class MyBatisPlusConfig {
 
-    @Override
-    public List<AbstractMethod> getMethodList(Class<?> mapperClass, TableInfo tableInfo) {
-        return super.getMethodList(mapperClass, tableInfo);
-    }
+//    @Bean
+//    public JoinDefaultSqlInjector joinDefaultSqlInjector() {
+//        return new JoinDefaultSqlInjector(new JoinDefaultSqlInjector());
+//    }
+
 
     @Bean
     public MybatisPlusJoinConfig mybatisPlusJoinConfig() {
@@ -32,7 +33,7 @@ public class MyBatisPlusConfig extends JoinDefaultSqlInjector {
                   MappedStatement的id，导致mybatis-plus-mate 的某些拦截器插件报错，
                   设置成false，代表不使用缓存则不会更改MappedStatement的id
                  */
-                .isUseMsCache(false)
+                .isUseMsCache(true)
                 .build();
     }
 
